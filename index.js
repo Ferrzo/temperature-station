@@ -18,7 +18,9 @@ sensor.readSimpleC((err, temperature) => {
     const newData = {temperature: temperature, date: now};
 
     ref.push(newData,
-       (a) => { if (a) { console.log(a); } else {console.log(`logged ${temperature} at ${now}.`) } });
+       (a) => { if (a) { console.log(a); } else {console.log(`logged ${temperature} at ${now}.`) }
+ process.exit();
+ });
   }
 });
 
