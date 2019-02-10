@@ -1,5 +1,7 @@
-var firebase = require("firebase-admin");
-var serviceAccount = require("./key/serviceAccountKey.json");
+const firebase = require("firebase-admin");
+const sensor = require('ds18b20-raspi');
+
+const serviceAccount = require("./key/serviceAccountKey.json");
 
 firebase.initializeApp({
   credential: firebase.credential.cert(serviceAccount),
@@ -7,6 +9,17 @@ firebase.initializeApp({
 });
 
 //TODO: Connect with raspberry PI extensions
+
+sensor.readSimpleC((err, temperature) => {
+  if(err) {
+    console.log(err);
+  } else {
+    console.log(temperature);
+  }
+});
+
+
+
 //TODO: Cron vs timer
 
 //TEST:
