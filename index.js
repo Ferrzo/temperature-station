@@ -14,12 +14,24 @@ sensor.readSimpleC((err, temperature) => {
   if(err) {
     console.log(err);
   } else {
-    const now = new Date().getTime();
-    const newData = {temperature: temperature, date: now};
+    const now = new Date();
+    
+    const newData = {year: now.getFullYear(), value: {
+      month: now.getMonth() +1,
+      value: {
+        day: now.getDate(),
+        value: {
+          temperature: temperature,
+          timestamp: now.getTime()
+          }
+        }  
+      }
+    };
 
     ref.push(newData,
-       (a) => { if (a) { console.log(a); } else {console.log(`logged ${temperature} at ${now}.`) }
- process.exit();
+       (a) => { if (a) { console.log(a); } else {console.log(`logged ${temperature} C at ${now}.`) }
+      db.goOffline();
+      process.exit();
  });
   }
 });
