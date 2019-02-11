@@ -1,5 +1,5 @@
 const firebase = require("firebase-admin");
-const sensor = require('ds18b20-raspi');
+const sensor = require("ds18b20-raspi");
 
 const serviceAccount = require("./key/serviceAccountKey.json");
 
@@ -8,31 +8,30 @@ firebase.initializeApp({
   databaseURL: "https://home-temperature-station.firebaseio.com"
 });
 
-let db = firebase.database();
-let ref = db.ref('temperature');
+const now = new Date();
+const db = firebase.database();
+const ref = db.ref(
+  `temperature/${now.getFullYear()}/${now.getMonth() + 1}/${now.getDate()}`
+);
+
 sensor.readSimpleC((err, temperature) => {
-  if(err) {
+  if (err) {
     console.log(err);
   } else {
-    const now = new Date();
-    
-    const newData = {year: now.getFullYear(), value: {
-      month: now.getMonth() +1,
-      value: {
-        day: now.getDate(),
-        value: {
-          temperature: temperature,
-          timestamp: now.getTime()
-          }
-        }  
-      }
+    const newData = {
+      temperature: temperature,
+      timestamp: now.getTime()
     };
 
-    ref.push(newData,
-       (a) => { if (a) { console.log(a); } else {console.log(`logged ${temperature} C at ${now}.`) }
+    ref.push(newData, a => {
+      if (a) {
+        console.log(a);
+      } else {
+        console.log(`logged ${temperature} C at ${now}.`);
+      }
       db.goOffline();
       process.exit();
- });
+    });
   }
 });
 
@@ -40,5 +39,3 @@ sensor.readSimpleC((err, temperature) => {
 /*ref.on('value', function(snapshot) {
     console.log(snapshot.val());
   });*/
-
-
