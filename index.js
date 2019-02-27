@@ -17,21 +17,22 @@ const ref = db.ref(
 sensor.readSimpleC((err, temperature) => {
   if (err) {
     console.log(err);
-  } else {
-    const newData = {
-      temperature: temperature,
-      timestamp: now.getTime()
-    };
+  }
+  if(temperature) {
+      const newData = {
+        temperature: temperature,
+        timestamp: now.getTime()
+      };
 
-    ref.push(newData, a => {
-      if (a) {
-        console.log(a);
-      } else {
-        console.log(`logged ${temperature} C at ${now}.`);
-      }
-      db.goOffline();
-      process.exit();
-    });
+      ref.push(newData, a => {
+        if (a) {
+          console.log(a);
+        } else {
+          console.log(`logged ${temperature} C at ${now}.`);
+        }
+        db.goOffline();
+        process.exit();
+      });
   }
 });
 
